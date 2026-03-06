@@ -11,15 +11,15 @@ This collection focuses on 11 critical attack vectors optimized for Bug Bounty h
 | ID | Template Name | Primary Objective | Severity |
 |:---|:---|:---|:---|
 | 1 | `sqli-check` | Error-based & Boolean SQL Injections | **Critical** |
-| 2 | `auth-bypass` | Login Form Bypass (Admin/User) | **High** |
+| 2 | `lfi-check` | Local File Inclusion / Path Traversal | **High** |
 | 3 | `idor-check` | Unauthorized Data Access via ID Manipulation | **High** |
-| 4 | `xss-fuzz` | Reflected XSS (Context-aware) | **High** |
-| 5 | `sensitive-files` | `.env`, `.git`, `.htaccess` & Config Exposure | **High** |
-| 6 | `exposed-backups` | SQL Dumps, ZIP Archives & Backup Scripts | **High** |
-| 7 | `ssti-polyglot` | Server-Side Template Injection (RCE) | **Critical** |
+| 4 | `auth-bypass` | Login Form Bypass (Admin/User) | **High** |
+| 5 | `jwt-check` | JWT Secret Exposure & Misconfiguration | **High** |
+| 6 | `xss-fuzz` | Reflected XSS (Context-aware) | **High** |
+| 7 | `exposed-backups` | SQL Dumps, ZIP Archives & Backup Scripts | **High** |
 | 8 | `admin-panel` | Discovering Hidden Admin Entry Points | **Medium** |
 | 9 | `debug-leak` | PHP/Python Stack Trace & Debug Leakage | **Medium** |
-| 10 | `open-redirect` | Phishing Vectors via URL Parameters | **Medium** |
+| 10 | `sensitive-files` | .env, .git, .htaccess & Config Exposure | **High** |
 | 11 | `cors-misconfig` | Insecure CORS (Credential Reflection) | **Medium** |
 
 ---
