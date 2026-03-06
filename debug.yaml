@@ -1,0 +1,50 @@
+id: debug-info-leak
+
+info:
+  name: Debug Information / Error Message Leakage
+  author: ExoShade
+  severity: medium
+  tags: debug,exposure,leak
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+      - "{{BaseURL}}/index.php"
+      - "{{BaseURL}}/?debug=1"
+      - "{{BaseURL}}/?trace=1"
+      - "{{BaseURL}}/test.php"
+      - "{{BaseURL}}/.env"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+          - 500
+
+      - type: regex
+        part: body
+        regex:
+          - "(?i)stack trace"
+          - "(?i)uncaught exception"
+          - "(?i)fatal error.*line"
+          - "(?i)debug backtrace"
+          - "(?i)undefined (variable|index|property)"
+          - "(?i)php (warning|notice)"
+          - "(?i)call to undefined function"
+          - "(?i)var_dump\\("
+          - "(?i)print_r\\("
+          - "(?i)Environment: (Django|Flask)"
+        condition: or
+
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "404 Not Found"
+          - "Page not found"
+
+      - type: dsl
+        dsl:
+          - "len(body) > 150"

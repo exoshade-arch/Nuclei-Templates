@@ -1,0 +1,48 @@
+id: sqli-error-based
+
+info:
+  name: Error-Based SQL Injection Detection
+  author: ExoShade
+  severity: high
+  tags: sqli,error-based,intrusive
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?id=1'"
+      - "{{BaseURL}}/?id=1%27"
+      - "{{BaseURL}}/?q=1'"
+      - "{{BaseURL}}/search?q=1'"
+      - "{{BaseURL}}/?page=1'"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+          - 500
+
+      - type: word
+        part: body
+        words:
+          - "SQL syntax"
+          - "You have an error in your SQL"
+          - "mysql_fetch"
+          - "SQLSTATE"
+          - "ORA-"
+          - "Microsoft OLE DB Provider"
+          - "ODBC Driver"
+          - "java.sql.SQLException"
+        condition: or
+
+      - type: word
+        words:
+          - "warning"
+          - "exception"
+          - "fatal error"
+        part: body
+        negative: true
+
+      - type: dsl
+        dsl:
+          - "len(body) > 100"

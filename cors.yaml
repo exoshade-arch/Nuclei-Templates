@@ -1,0 +1,46 @@
+id: cors-misconfig
+
+info:
+  name: Insecure CORS Configuration
+  author: ExoShade
+  severity: medium
+  tags: cors,misconfig,exposure
+
+http:
+  - raw:
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        Origin: https://evil.com
+
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        Origin: null
+
+      - |
+        GET / HTTP/1.1
+        Host: {{Hostname}}
+        Origin: https://{{Hostname}}.evil.com
+
+    req-condition: true
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "Access-Control-Allow-Origin: https://evil.com"
+          - "Access-Control-Allow-Origin: null"
+          - "Access-Control-Allow-Origin: https://{{Hostname}}.evil.com"
+          - "Access-Control-Allow-Origin: *"
+        condition: or
+
+      - type: word
+        part: header
+        words:
+          - "Access-Control-Allow-Credentials: true"
+
+      - type: status
+        status:
+          - 200
+          - 204

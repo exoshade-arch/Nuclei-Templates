@@ -1,0 +1,50 @@
+id: admin-panel-discovery
+
+info:
+  name: Exposed Admin Panels
+  author: ExoShade
+  severity: medium
+  tags: admin,panel,discovery
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/admin"
+      - "{{BaseURL}}/administrator"
+      - "{{BaseURL}}/admin/login"
+      - "{{BaseURL}}/dashboard"
+      - "{{BaseURL}}/cpanel"
+      - "{{BaseURL}}/wp-admin"
+      - "{{BaseURL}}/adminer.php"
+      - "{{BaseURL}}/phpmyadmin"
+
+    redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        part: body
+        words:
+          - "type=\"password\""
+          - "name=\"user\""
+          - "name=\"pass\""
+          - "login-form"
+          - "wp-submit"
+        condition: or
+
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "404 Not Found"
+          - "Access Denied"
+          - "Page not found"
+
+      - type: dsl
+        dsl:
+          - "len(body) > 500"

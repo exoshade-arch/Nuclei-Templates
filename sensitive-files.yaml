@@ -1,0 +1,50 @@
+id: sensitive-files-exposure
+
+info:
+  name: Sensitive File / Config Exposure
+  author: ExoShade
+  severity: high
+  tags: config,exposure,sensitive-file
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/.env"
+      - "{{BaseURL}}/.env.local"
+      - "{{BaseURL}}/.env.example"
+      - "{{BaseURL}}/config.php"
+      - "{{BaseURL}}/web.config"
+      - "{{BaseURL}}/settings.json"
+      - "{{BaseURL}}/.git/config"
+      - "{{BaseURL}}/.htaccess"
+      - "{{BaseURL}}/config.bak"
+      - "{{BaseURL}}/db.php"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: regex
+        part: body
+        regex:
+          - "(?i)DB_(PASSWORD|USER|HOST|NAME|PORT)"
+          - "(?i)API_KEY|SECRET_KEY|ACCESS_KEY"
+          - "(?i)password\\s*=\\s*['\"][^'\"]+['\"]"
+          - "(?i)mysql|postgres|sqlite"
+          - "(?i)\\[core\\]"
+          - "(?i)GITDIR"
+        condition: or
+
+      - type: dsl
+        dsl:
+          - "len(body) > 50"
+
+      - type: word
+        part: body
+        negative: true
+        words:
+          - "404 Not Found"
+          - "Page not found"
+          - "forbidden"

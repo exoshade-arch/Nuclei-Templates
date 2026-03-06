@@ -1,0 +1,54 @@
+id: idor-pii-leak-with-baseline
+
+info:
+  name: IDOR - PII Leakage via User ID
+  author: ExoShade
+  severity: high
+  tags: idor,pii,api,exposure
+
+http:
+  - raw:
+      - |
+        GET /api/users/me HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /api/users/{{my_id}} HTTP/1.1
+        Host: {{Hostname}}
+
+      - |
+        GET /api/users/1 HTTP/1.1
+        Host: {{Hostname}}
+
+    extractors:
+      - type: regex
+        name: my_id
+        part: body
+        group: 1
+        regex:
+          - '"id":\s*(\d+)'
+          - '"user_id":\s*(\d+)'
+          - '"uid":\s*(\d+)'
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: regex
+        part: body
+        regex:
+          - '"email":\s*"[^"]+@[^"]+\.[a-z]{2,}"'
+          - '"phone":\s*"\+?\d{8,15}"'
+          - '"first_name":\s*"[^"]+"'
+          - '"last_name":\s*"[^"]+"'
+        condition: or
+
+      - type: word
+        words:
+          - "login"
+          - "unauthorized"
+          - "forbidden"
+        part: body
+        negative: true

