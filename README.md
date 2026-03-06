@@ -28,8 +28,9 @@ This collection focuses on 11 critical attack vectors optimized for Bug Bounty h
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/exoshade-arch/nuclei-templates.git](https://github.com/exoshade-arch/nuclei-templates.git)
-   cd nuclei-templates
+   git clone https://github.com/exoshade-arch/Nuclei-Templates.git
+   cd Nuclei-Templates
+   nuclei -t . -u target.com
 
 ## 🛠️ Validation:
 **Verify that all templates are correctly formatted:**
