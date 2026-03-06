@@ -39,7 +39,7 @@ nuclei -t . -validate
 
 ## ⚔️ Usage Guide:
 **Scan a single target using the entire arsenal:**
-```bash
+
 nuclei -u [https://target.com](https://target.com) -t . -v
 
 
