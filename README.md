@@ -34,6 +34,7 @@ This collection focuses on 11 critical attack vectors optimized for Bug Bounty h
 
 ## 🛠️ Validation:
 **Verify that all templates are correctly formatted:**
+
 nuclei -t . -validate
 
 ## ⚔️ Usage Guide:
@@ -41,11 +42,14 @@ nuclei -t . -validate
 ```bash
 nuclei -u [https://target.com](https://target.com) -t . -v
 
+
 nuclei -l targets.txt -t . -o results_exoshade.txt
+
 
 nuclei -u [https://target.com](https://target.com) -t . -severity critical,high
 
+
 ## 🛡️ Security Disclaimer:
- This arsenal is provided for educational purposes and authorized security testing only. ExoShade (exoshade-arch) is not responsible for   any misuse or damage caused by these templates on unauthorized systems.
+This arsenal is provided for educational purposes and authorized security testing only. ExoShade (exoshade-arch) is not responsible for   any misuse or damage caused by these templates on unauthorized systems.
 
  Happy Hacking! 💻🔥
