@@ -23,7 +23,7 @@ http:
 
     matchers-condition: or
     matchers:
-      # Linux Matcher
+      
       - type: word
         name: linux
         part: body
@@ -33,7 +33,6 @@ http:
           - "bin:x:"
         condition: or
 
-      # Windows Matcher
       - type: word
         name: windows
         part: body
@@ -41,4 +40,5 @@ http:
           - "for 16-bit app support"
           - "[extensions]"
           - "MPEGVideo"
+
         condition: or
