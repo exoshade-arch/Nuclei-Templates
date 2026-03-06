@@ -37,6 +37,8 @@ This collection focuses on 11 critical attack vectors optimized for Bug Bounty h
 ```bash
 nuclei -t . -validate
 
+---
+
 ## ⚔️ Usage Guide
 **Scan a single target using the entire arsenal:**
 ```bash
